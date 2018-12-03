@@ -75,3 +75,62 @@ Plus I will surely stumble on a Raspberry, leading to it crashing. A "Plug and P
 allows me to move them around my network without too much worries about catastrophic failures,
 and having to manually re-configure them from scratch, as long as one of them is still running
 as `master` node.
+
+The following steps are inspired by https://gist.github.com/alexellis/fdbc90de7691a1b9edb545c17da2d975,
+and further refined by me in https://gist.github.com/alexellis/fdbc90de7691a1b9edb545c17da2d975#gistcomment-2775966.
+
+### Disable SWAP, Install Docker, Kubernetes administrative tools
+
+Copy the file at `bin/disable-swap-install-docker-and-kubeadm.sh` into each raspberry that will be part of the cluster,
+then run it. Note that this will reboot your raspberry:
+
+```sh
+scp bin/disable-swap-install-docker-and-kubeadm.sh pi@192.168.1.100:~/
+ssh pi@192.168.1.100
+./disable-swap-install-docker-and-kubeadm.sh
+```
+
+### Set up master node
+
+Then run this on the node you want to mark as `master` (note: tested with kubernetes `v1.12.3` and docker `18.06.0`):
+
+```sh
+sudo kubeadm init --token-ttl=0 --pod-network-cidr=10.244.0.0/16 --apiserver-advertise-address=192.168.1.100
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/c5d10c8/Documentation/kube-flannel.yml
+kubectl patch daemonset kube-flannel-ds-arm \
+  --namespace=kube-system \
+  --patch='{"spec":{"template":{"spec":{"tolerations":[{"key": "node-role.kubernetes.io/master", "operator": "Exists", "effect":
+  "NoSchedule"},{"effect":"NoSchedule","operator":"Exists"}]}}}}
+```
+
+### Join further nodes
+
+To join a node, generate a "join token":
+
+```sh
+ssh pi@192.168.1.100 -e "sudo kubeadm token create --print-join-command"
+```
+
+Then run it on the nodes that should join:
+
+```sh
+kubeadm join --token <snip> 192.168.1.100:6443 --discovery-token-ca-cert-hash sha256:<snip>
+```
+
+I'd also advise adding the `kubectl` configuration to your own machine. Do this *ONLY* if you
+don't already have another configured cluster, as it will overwrite your local configuration:
+
+```sh
+mkdir ~/.kube
+scp pi@192.168.1.100:~/.kube/config ~/.kube/config
+```
+
+You should be able to monitor the cluster from your local machine:
+
+```sh
+kubectl get nodes
+kubectl get pods
+```
