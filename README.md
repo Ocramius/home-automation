@@ -3,6 +3,9 @@
 This is a personal setup of a Raspberry PI Kubernetes cluster that I'll use
 for the purpose of reducing the security of my LAN.
 
+This is a personal project, and the repository is public and only exists for the
+purpose of documenting what is going on: use at your own risk.
+
 # Step 1: get some Raspberry Pi machines
 
 The first step is to set up a bunch of Raspberry Pi 3B+ machines.
@@ -20,3 +23,32 @@ The hardware I use:
 In my case, I aim to have at least 3 of these things running.
 
 Set them up, wire them together.
+
+# Step 2: bootstrap the Raspberry Pi machines with Debian Stretch
+
+This step is inspired by [this gist](https://gist.github.com/alexellis/a7b6c8499d9e598a285669596e9cdfa2)
+
+In order to do that, insert the SD card in your computer (I recommend using
+an USB SD card adapter, since laptop SD card readers are buggy as hell), then run (as root):
+
+```sh
+RPI_SD_CARD_DEVICE=<see-disk-name-through-lsblk-first> \
+RPI_HOSTNAME=host-name-of-the-raspberry-pi \
+RPI_IP_PART_4=100 \
+RPI_AUTHORISED_SSH_KEYS=<your-ssh-public-keys> \
+./bin/provision-raspberry-pi-sd-card.sh
+```
+
+For example:
+
+```sh
+RPI_SD_CARD_DEVICE=sdc \
+RPI_HOSTNAME=my-rpi-1 \
+RPI_IP_PART_4=253 \
+RPI_AUTHORISED_SSH_KEYS=$(ssh-add -L) \
+./bin/provision-raspberry-pi-sd-card.sh
+```
+
+This may fail if your SDXC was previously formatted, or has bad sectors. If that is
+the case, try formatting it manually, and make sure the advertised disk size matches
+the one you see in `df -h`.
