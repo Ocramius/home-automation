@@ -25,6 +25,8 @@ kind: Deployment
 metadata:
   name: node-red
 spec:
+  # important: node-red is not a distributed application, so we can only have one
+  # running replica at a time.
   replicas: 1
   template:
     metadata:
