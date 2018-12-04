@@ -100,3 +100,18 @@ spec:
             - --api
             - --kubernetes
             - --logLevel=INFO
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: traefik-web-ui
+  namespace: kube-system
+  description: The Traefik Web UI, used to display reverse proxy frontends/backends and their health
+spec:
+  selector:
+    k8s-app: traefik-ingress-lb
+  ports:
+    # note that these ports aren't exposed to the outside world, just to the cluster
+    - name: web
+      port: 8080
+      targetPort: 8080
