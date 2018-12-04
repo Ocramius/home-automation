@@ -1,13 +1,15 @@
-# this is just a stub of a node-red service definition without an exposed port
-# node-red is a nice piece of software that happens to be built on top of the worst
-# possible software stack, plus the damn thing has no authentication out of the
-# box (you need to enable it). We will
 apiVersion: v1
 kind: Service
 metadata:
   name: node-red
   labels:
     app: node-red
+    description: >-
+      this is just a stub of a node-red service definition without an exposed port
+      node-red is a nice piece of software that happens to be built on top of the worst
+      possible software stack, plus the damn thing has no authentication out of the
+      box (you need to enable it). We will therefore isolate it behind a proxy that does
+      the authentication for us.
 spec:
   type: NodePort
   ports:
