@@ -134,3 +134,32 @@ You should be able to monitor the cluster from your local machine:
 kubectl get nodes
 kubectl get pods
 ```
+
+## Step 4: configure a reverse proxy and run an application behind it
+
+In order to set up Traefik to serve as an ingress to our application,
+I prepared some annotated kubernetes manifests:
+
+```sh
+# set up traefik to serve our traffic
+kubectl apply -f kubernetes-manifests/traefik-ingress-controller.yml
+
+# start a node-red application (graphical home automation tool)
+kubectl apply -f kubernetes-manifests/node-red.yml
+
+# configure the ingress to forward traffic to the various services (including node-red)
+kubectl apply -f kubernetes-manifests/ingress.yml
+```
+
+When this is done, we should see the running traefik and node-red instances,
+with one traefik instance running on each node:
+
+```sh
+kubectl get pods --all-namespaces
+NAMESPACE     NAME                                        READY   STATUS             RESTARTS   AGE    IP              NODE                NOMINATED NODE
+<snip>
+default       node-red-7669fd7fbc-52vgn                   1/1     Running            0          18h    10.244.1.23     ocramius-k8s-pi-2   <none>
+kube-system   traefik-ingress-controller-9rnc9            1/1     Running            0          115m   10.244.0.4      ocramius-k8s-pi-1   <none>
+kube-system   traefik-ingress-controller-25pp8            1/1     Running            0          169m   10.244.1.24     ocramius-k8s-pi-2   <none>
+kube-system   traefik-ingress-controller-9rnc9            1/1     Running            0          115m   10.244.2.20     ocramius-k8s-pi-3   <none>
+```
