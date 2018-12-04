@@ -111,13 +111,13 @@ kubectl patch daemonset kube-flannel-ds-arm \
 To join a node, generate a "join token":
 
 ```sh
-ssh pi@192.168.1.100 -e "sudo kubeadm token create --print-join-command"
+ssh pi@192.168.1.100 "sudo kubeadm token create --print-join-command"
 ```
 
 Then run it on the nodes that should join:
 
 ```sh
-kubeadm join --token <snip> 192.168.1.100:6443 --discovery-token-ca-cert-hash sha256:<snip>
+ssh pi@192.168.1.110 "sudo kubeadm join --token <snip> 192.168.1.100:6443 --discovery-token-ca-cert-hash sha256:<snip>"
 ```
 
 I'd also advise adding the `kubectl` configuration to your own machine. Do this *ONLY* if you
