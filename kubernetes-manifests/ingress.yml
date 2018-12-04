@@ -1,0 +1,25 @@
+# this is the main (and only, for our needs) ingress to our application. We configure
+# the Traefik reverse proxy to match a host name (via header), and redirect traffic
+# to the respective service
+# See https://kubernetes.io/docs/concepts/services-networking/ingress/
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: traefik-web-ui
+  namespace: kube-system
+spec:
+  rules:
+    - host: traefik-ui.minikube
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: traefik-web-ui
+              servicePort: web
+    - host: node-red.minikube
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: node-red
+              servicePort: web
