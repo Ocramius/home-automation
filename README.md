@@ -163,3 +163,17 @@ kube-system   traefik-ingress-controller-9rnc9            1/1     Running       
 kube-system   traefik-ingress-controller-25pp8            1/1     Running            0          169m   10.244.1.24     ocramius-k8s-pi-2   <none>
 kube-system   traefik-ingress-controller-9rnc9            1/1     Running            0          115m   10.244.2.20     ocramius-k8s-pi-3   <none>
 ```
+
+You can test the setup by `curl`-ing all hosts:
+
+```sh
+curl http://192.168.1.110 # should produce a 404 (expected)
+curl http://192.168.1.111 # should produce a 404 (expected)
+curl http://192.168.1.112 # should produce a 404 (expected)
+curl --header 'Host: traefik-ui.minikube' http://192.168.1.110 # should redirect to /dashboard/
+curl --header 'Host: traefik-ui.minikube' http://192.168.1.111 # should redirect to /dashboard/
+curl --header 'Host: traefik-ui.minikube' http://192.168.1.112 # should redirect to /dashboard/
+curl --header 'Host: node-red.minikube' http://192.168.1.110 # should be some node-red HTML
+curl --header 'Host: node-red.minikube' http://192.168.1.111 # should be some node-red HTML
+curl --header 'Host: node-red.minikube' http://192.168.1.112 # should be some node-red HTML
+```
