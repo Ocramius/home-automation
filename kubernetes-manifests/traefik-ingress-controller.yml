@@ -75,6 +75,8 @@ spec:
       serviceAccountName: traefik-ingress-controller
       terminationGracePeriodSeconds: 60
       containers:
+        # We need the ARM32 architecture build, since we are running everything
+        # on Raspberry PI 3B+ instances
         - image: arm32v6/traefik
           name: traefik-ingress-lb
           ports:
