@@ -43,7 +43,7 @@ echo "gpu_mem=16" >> /mnt/rpi/boot/config.txt
 
 cp /mnt/rpi/root/etc/dhcpcd.conf /mnt/rpi/root/etc/dhcpcd.conf.orig
 
-sed s/100/$2/g template-dhcpcd.conf > /mnt/rpi/root/etc/dhcpcd.conf
+sed s/100/$RPI_IP_PART_4/g template-dhcpcd.conf > /mnt/rpi/root/etc/dhcpcd.conf
 
 echo "Unmounting SD Card"
 
