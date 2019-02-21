@@ -9,8 +9,8 @@ curl -sSL get.docker.com | sh && \
   sudo usermod pi -aG docker
 
 newgrp docker
-apt purge -y docker-ce && apt-autoremove -y
-apt install docker-ce=18.06.0~ce~3-0~raspbian
+apt purge -y docker-ce && apt autoremove -y
+apt install -y docker-ce=18.06.0~ce~3-0~raspbian
 
 sudo dphys-swapfile swapoff && \
   sudo dphys-swapfile uninstall && \
