@@ -33,10 +33,10 @@ touch /mnt/rpi/boot/ssh
 
 sed -ie s/#PasswordAuthentication\ yes/PasswordAuthentication\ no/g /mnt/rpi/root/etc/ssh/sshd_config
 
-echo "Setting hostname: $1"
+echo "Setting hostname: $RPI_HOSTNAME"
 
-sed -ie s/raspberrypi/$1/g /mnt/rpi/root/etc/hostname
-sed -ie s/raspberrypi/$1/g /mnt/rpi/root/etc/hosts
+sed -ie s/raspberrypi/$RPI_HOSTNAME/g /mnt/rpi/root/etc/hostname
+sed -ie s/raspberrypi/$RPI_HOSTNAME/g /mnt/rpi/root/etc/hosts
 
 # Reduce GPU memory to minimum
 echo "gpu_mem=16" >> /mnt/rpi/boot/config.txt
