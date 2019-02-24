@@ -100,10 +100,6 @@ mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
-kubectl patch daemonset kube-flannel-ds-arm \
-  --namespace=kube-system \
-  --patch='{"spec":{"template":{"spec":{"tolerations":[{"key": "node-role.kubernetes.io/master", "operator": "Exists", "effect":
-  "NoSchedule"},{"effect":"NoSchedule","operator":"Exists"}]}}}}
 ```
 
 ### Join further nodes
