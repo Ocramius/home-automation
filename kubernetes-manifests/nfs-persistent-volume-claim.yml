@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nfs-persistent-volume-claim
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: ""
+  resources:
+    requests:
+      # note that this is not a restriction, but rather a "I want a PersistentVolume where 10Gi fit":
+      storage: 10Gi
