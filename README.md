@@ -1,3 +1,11 @@
+## Archived
+
+Note: this repository is archived, since I moved on from this approach, and will rebuild things from
+scratch in future.
+
+My learning is: don't use k8s nor k3s for home automation, rely on `docker-compose` instead,
+which is simpler **AND** more reliable, for this sort of work
+
 # Home automation
 
 This is a personal setup of a Raspberry PI Kubernetes cluster that I'll use
